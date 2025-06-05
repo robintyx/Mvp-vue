@@ -1,0 +1,64 @@
+{
+  "name": "mirovideo-vue3-vite-base",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:test": "vite --mode test",
+    "dev:pro": "vite --mode production",
+    "build": "vite build --mode production",
+    "build:test": "vite build --mode test",
+    "preview": "vite preview",
+    "lint:fix": "eslint --fix --ext .js,.vue ."
+  },
+  "dependencies": {
+    "@ant-design/icons-vue": "^7.0.1",
+    "@vueuse/core": "^10.9.0",
+    "ant-design-vue": "^4.2.5",
+    "dayjs": "^1.11.13",
+    "microvideo-map": "^1.0.6",
+    "microvideo-request": "^0.0.25",
+    "nprogress": "^0.2.0",
+    "pinia": "^2.2.2",
+    "pinia-plugin-persistedstate": "^4.0.0",
+    "vue": "^3.5.0",
+    "vue-router": "^4.4.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.4",
+    "@babel/eslint-parser": "^7.24.1",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "eslint": "^8.49.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-vue": "^9.17.0",
+    "less": "^4.2.0",
+    "less-loader": "^12.2.0",
+    "postcss-pxtorem": "^6.1.0",
+    "prettier": "^3.3.3",
+    "unplugin-auto-import": "^0.18.2",
+    "unplugin-vue-components": "^0.27.4",
+    "vite": "^5.4.3",
+    "vite-plugin-eslint": "^1.8.1",
+    "vite-plugin-require-transform": "^1.0.21",
+    "vite-plugin-router-warn": "^1.0.0",
+    "vite-plugin-simple-html": "^0.1.2",
+    "vite-plugin-svg-icons": "^2.0.1",
+    "vite-plugin-vue-devtools": "^7.1.2"
+  },
+  "eslintConfig": {
+    "extends": [
+      "scaffold-config/.eslint-global-variables.json"
+    ],
+    "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    }
+  },
+  "engines": {
+    "node": ">=18 <=20",
+    "pnpm": ">=8 <=9"
+  }
+}
