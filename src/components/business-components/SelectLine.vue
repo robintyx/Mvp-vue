@@ -214,7 +214,7 @@ function handleTableChange(pag) {
 }
 
 function checkStatus() {
-  let status = 0
+  let status
   if (checked.value === true) {
     status = 1
   } else {

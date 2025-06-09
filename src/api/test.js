@@ -2,8 +2,6 @@ import { createRequest } from 'microvideo-request'
 
 /**
  * 测试接口：获取天气：彩云天气119.816989, 31.686698
- * @param  data
- * @returns
  */
 export const getCaiYunWeatherData = (params) => {
   return createRequest().setParameters(params).get('/nhu-dp-show/api/fuwuyun/getCaiYunWeatherData')
