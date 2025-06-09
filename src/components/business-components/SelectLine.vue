@@ -3,6 +3,13 @@
     <div class="title">查询路线</div>
     <a-divider></a-divider>
     <div class="bottom">
+      <a-select
+        ref="select"
+        style="width: 120px"
+        v-model:value="value1"
+        :options="options1"
+        @change="handleChange"
+      ></a-select>
       <a-button type="primary" :icon="h(SearchOutlined)" @click="selectLineList">搜索</a-button>
       <a-switch v-model:checked="state.checkedAll" @change="showAll">
         <template #checkedChildren>
@@ -92,7 +99,7 @@
             <a-textarea
               v-model:value="form.lineSpatialData"
               :rows="15"
-              placeholder="please enter url description"
+              placeholder="输入路线空间数据"
             />
           </a-form-item>
         </a-col>
@@ -111,14 +118,18 @@
 import { getCurrentInstance, h, onMounted, ref } from 'vue'
 import { CheckOutlined, CloseOutlined, SearchOutlined } from '@ant-design/icons-vue'
 import {
+  getAllCameraInfoByLineId,
   getAllLineInfo,
   getCompanyInfo,
   getLineInfo,
   getLineInfoById,
+  getLineInfoBySectionId,
   getSectionInfo,
   updateLineInfo,
 } from '@/api/test.js'
 
+//eslint-disable-next-line no-unused-vars
+let markers = null
 // 页数配置
 const pagination = reactive({
   current: 1,
@@ -152,10 +163,11 @@ const rules = {
   ],
 }
 let lineList = null
+let point = null
 let line_id = null
 let proxy = getCurrentInstance()
 //section_id
-const value1 = ref('')
+const value1 = ref('未选择路段')
 const options1 = ref([])
 //company_id
 const value2 = ref('')
@@ -239,7 +251,9 @@ const createLine = (record) => {
   // 如果已有线路图层，先移除
   if (lineList) {
     proxy.$mapSdk().removeMvMapLineLayer(lineList)
+    proxy.$mapSdk().removeMvMapMarkerLayer(markers)
     lineList = null
+    markers = null
   }
 
   const lineConfig = {
@@ -284,6 +298,24 @@ const createLine = (record) => {
       }
     })
   })
+
+  getAllCameraInfoByLineId(record.line_id).then((res) => {
+    point = res.map((item) => {
+      let iconStr = ''
+      if (item.type === 1) {
+        iconStr = 'icon-gs-sxt'
+      }
+      if (item.type === 2) {
+        iconStr = 'icon-gl-sxt'
+      }
+      return {
+        icon: iconStr,
+        path: item.path,
+        name: item.name,
+      }
+    })
+    markers = proxy.$mapSdk().createMvMapMarkerLayer(point)
+  })
 }
 
 const showAll = () => {
@@ -292,7 +324,9 @@ const showAll = () => {
     // 判断是否已经绘制折线
     if (lineList) {
       proxy.$mapSdk().removeMvMapLineLayer(lineList)
+      proxy.$mapSdk().removeMvMapMarkerLayer(markers)
       lineList = null
+      markers = null
     }
 
     //  请求所有数据线路
@@ -321,13 +355,31 @@ const showAll = () => {
     if (lineList) {
       proxy.$mapSdk().removeMvMapLineLayer(lineList)
       lineList = null
-      dataSource.value = []
-      pagination.current = 1
-      pagination.pageSize = 10
-      pagination.total = 0
+      markers = null
     }
   }
 }
+
+/**
+ * 选择路段查询摄像头信息
+ */
+function handleChange(value) {
+  getLineInfoBySectionId(value).then((res) => {
+    dataSource.value = res.data.map((item) => ({
+      line_id: item.line_id,
+      line_name: item.line_name,
+      section_name: item.section_name,
+    }))
+  })
+}
+
+// 选择器获取路段信息
+getSectionInfo().then((response) => {
+  options1.value = response.data.map((item) => ({
+    value: item.section_id,
+    label: item.section_name,
+  }))
+})
 </script>
 
 <style scoped>

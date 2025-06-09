@@ -87,14 +87,34 @@ export const getCameraInfoByLineId = (line_id, page, limit) => {
     })
 }
 
+export const getAllCameraInfoByLineId = (line_id) => {
+  return createRequest()
+    .get(`/camera/lineAll/${line_id}`)
+    .then((response) => {
+      return response.data.map((item) => {
+        const path = [item.longitude, item.latitude]
+        const name = item.camera_name
+        const type = item.type_id
+        const id = item.camera_id
+        const line_id = item.line_id
+        const line_name = item.line
+        return { path, name, type, id, line_id, line_name }
+      })
+    })
+}
+
 export const delCameraById = (id) => {
   return createRequest().get(`/camera/del/${id}`)
 }
 
-export const getCameraType =  () => {
+export const getCameraType = () => {
   return createRequest().get(`/camera/type`)
 }
 
 export const updateCameraInfo = (camera) => {
   return createRequest().setParameters(camera).post(`/camera/update`)
+}
+
+export const getLineInfoBySectionId = (section_id) => {
+  return createRequest().get(`/line/section/${section_id}`)
 }
